@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>任务8</title>
+
+	<style type="text/css">
+		div{
+			font-size: 16px;
+			padding:20px;
+			margin:8px;
+			border:1px solid black;
+			float:left;
+		}
+		input,button{
+			border:none;
+			font-size: 16px;
+			line-height:25px;
+			color:#fff;
+			background:#F00946;
+			border-radius: 5px;
+		}
+		input{
+			border:1px solid #f00946;
+			background: none;
+			color:black;
+			text-indent: 5px;
+		}
+	</style>
+
+</head>
+<body>
+	<div id='root'>creatures
+		<div class="node-1">animals
+			<div class="node-2">fly
+				<div class="node-3">bird</div>
+				<div class="node-3">butterfly</div>
+				<div class="node-3">mosquito</div>
+			</div>
+			<div class="node-2">run
+				<div class="node-3">tiger</div>
+				<div class="node-3">monkey</div>
+				<div class="node-3">chicken</div>
+			</div>
+			<div class="node-2">swim
+				<div class="node-3">fish</div>
+				<div class="node-3">duck</div>
+				<div class="node-3">shrimp</div>
+			</div>
+		</div>
+
+		<div class="node-1">plants
+			<div class="node-2">flower
+				<div class="node-3">lily</div>
+				<div class="node-3">rose</div>
+			</div>
+			<div class="node-2">fruit
+				<div class="node-3">grape</div>
+				<div class="node-3">orange</div>
+				<div class="node-3">apple</div>
+				<div class="node-3">cherry</div>
+			</div>
+		</div>
+
+		<div class="node-1">virus
+			<div class="node-2">hiv</div>
+			<div class="node-2">sars</div>
+		</div>
+	</div>
+
+	<button>前序遍历</button>
+	<button>后序遍历</button>
+	<input type='text' />
+	<button>查询</button>
+
+	<script type="text/javascript" src='task8.js'></script>
+</body>
+</html>
