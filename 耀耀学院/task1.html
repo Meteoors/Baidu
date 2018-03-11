@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务1</title>
+	<style type="text/css">
+		*{padding: 0; margin:0;}
+		form{text-align: center; margin-top: 100px;}
+		label{font-size: 16px; }
+		input{line-height:30px; height:30px; border-radius: 5px; margin-left: 20px; font-size: 16px; outline: none;}
+		#user_name{border:1px solid #C1C1C1; width:200px; text-indent: 5px;}
+		#user_name:focus{box-shadow: 0 0 0 2px #9AE4E8; border:none; height:28px;}
+		#check{width:50px; border:none; color:#fff; background: #216FCC; height:32px;}
+		#check:focus{box-shadow: 0 0 0 1px #36325C;}
+		span{position:absolute; left:574px; top:135px; font-size: 14px; color: #8B959E;}
+	</style>
+</head>
+<body>
+	<form>
+		<label for="user_name">名称</label>
+		<input type="text" name='user_name' id='user_name' />
+		<input type="button" value="验证" id='check' />
+		<span>必填，长度为4~16个字符</span>
+	</form>
+
+	<script type="text/javascript">
+		window.onload=function(){
+			var input=document.getElementById('user_name');
+			var button=document.getElementById('check');
+			var hint=document.getElementsByTagName('span')[0];
+			var len;
+
+			function getLen(){
+				var str=document.getElementById('user_name').value;
+				if(str==''){
+					len=0;
+				}else{
+					for(var i=0; i<str.length; i++){
+						if(str.charCodeAt(i)>255){
+							len+=2;
+						}else{
+							len++;
+						}
+					}
+				}
+			}
+
+			function validate(){
+				if(len==0){
+					input.style.borderColor='red';
+					hint.style.color='red';
+					hint.innerHTML='姓名不能为空';
+				}else if(len>=4&&len<=16){
+					input.style.borderColor='#3BC048';
+					hint.style.color='#3BC048';
+					hint.innerHTML='名称格式正确';
+				}else{
+					input.style.borderColor='red';
+					hint.style.color='red';
+					hint.innerHTML='长度应为4~16个字符';
+				}
+			}
+
+			button.onclick=function(){
+				len=0;
+				getLen();
+				validate();
+			}
+
+
+		}
+	</script>
+</body>
+</html>

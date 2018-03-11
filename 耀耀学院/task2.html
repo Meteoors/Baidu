@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务2</title>
+	<style type="text/css">
+		ul,li{padding:0; margin:0;}
+		ul{font-size: 16px; width:800px; list-style: none; margin:0 auto; font-family: '微软雅黑';}
+		li{ margin:20px 0;}
+		li label{display:inline-block; font-weight: bold; width:100px; text-align: right; margin-right:20px;}
+		li input{border-radius: 5px; border:1px solid #9E9898; height:40px; line-height: 30px; outline:0; width:600px; font-size: 18px; padding-left: 10px; }
+		input:focus{box-shadow: 0 0 0 1px #3ECBD2; border:0; height:41px; margin-top:1px;}
+		.tips{margin-left:125px; margin-top:8px; color:#A1A1A1; margin-bottom:30px; display: none;}
+		button{height:44px; margin-left:636px; width:100px; background: #3775D8; color:white; border:0; border-radius: 5px; outline: none; font-size: 18px;}
+		button:focus{box-shadow: 0 0 0 1px #1D4FAE;}
+
+	</style>
+</head>
+<body>
+	<form>
+		<ul>
+			<li>
+				<label for='user'>名称</label>
+				<input type="text" name="user" id='user'>
+				<div class='tips'>必填，长度为4~16个字符</div>
+			</li>
+			<li>
+				<label for='password1'>密码</label>
+				<input type="password" name="password1" id='password1'>
+				<div class='tips'>必填，长度为8~20个字符</div>
+			</li>
+			<li>
+				<label for='password2'>确认密码</label>
+				<input type="password" name="password2" id='password2'>
+				<div class='tips'>必填，再次输入您的密码</div>
+			</li>
+			<li>
+				<label for='mail'>邮箱</label>
+				<input type="mail" name="mail" id='mail'>
+				<div class='tips'>必填，请输入您的常用邮箱</div>
+			</li>
+			<li>
+				<label for='phone'>手机</label>
+				<input type="text" name="phone" id='phone'>
+				<div class='tips'>必填，请输入您的手机号</div>
+			</li>
+			<li>
+				<button type='submit'>提交</button>
+			</li>
+		</ul>
+	</form>
+
+	<script type="text/javascript">
+		window.onload=function(){
+			var inputs=document.getElementsByTagName('input'),
+				tips=document.getElementsByTagName('div'),
+				btn=document.getElementsByTagName('button')[0];
+
+			for(var i=0; i<inputs.length; i++){
+				inputs[i].count=i;      //触发事件时循环已结束，i=length，给inputs[i]绑定一个count记录位置；
+				inputs[i].onfocus=function(){
+					tips[this.count].style.display='block';
+				};
+			}
+
+
+			//名称验证
+			inputs[0].onblur=function(){
+				var str=this.value,
+					len=0;
+
+				//英文字符长度为1，中文字符长度为2
+				if(str==''){
+					len=0;
+				}else{
+					for(var i=0; i<str.length; i++){
+						if(str.charCodeAt(i)>255){
+							len+=2;
+						}else{
+							len++;
+						}
+					}
+				}
+
+				if(len==0){
+					this.borderColor='red';
+					tips[0].style.color='red';
+					tips[0].innerHTML='姓名不能为空';
+				}else if(len>=4&&len<=16){
+					this.borderColor='#3BC048';
+					tips[0].style.color='#3BC048';
+					tips[0].innerHTML='名称格式正确';
+				}else{
+					this.borderColor='red';
+					tips[0].style.color='red';
+					tips[0].innerHTML='长度应为4~16个字符';
+				}
+			}
+
+			//密码验证
+			inputs[1].onblur=function(){
+				var len=this.value.length;
+				if(len==0){
+					this.borderColor='red';
+					tips[1].style.color='red';
+					tips[1].innerHTML='密码不能为空';
+				}else if(len>7&&len<21){
+					this.borderColor='#3BC048';
+					tips[1].style.color='#3BC048';
+					tips[1].innerHTML='密码可用';
+				}else{
+					this.borderColor='red';
+					tips[1].style.color='red';
+					tips[1].innerHTML='长度应为8~20个字符';
+				}
+			}
+
+			//确认密码
+			inputs[2].onblur=function(){
+				var len=this.value.length;
+				if(this.value==inputs[1].value&&len>7&&len<21){
+					this.borderColor='#3BC048';
+					tips[2].style.color='#3BC048';
+					tips[2].innerHTML='密码可用';
+				}else if(this.value!=inputs[1].value){
+					this.borderColor='red';
+					tips[2].style.color='red';
+					tips[2].innerHTML='两次输入的密码不一致';
+				}else{
+					this.borderColor='red';
+					tips[2].style.color='red';
+					tips[2].innerHTML='长度应为8~20个字符';
+				}
+			}
+
+			//验证邮箱
+			inputs[3].onblur=function(){
+				var val=inputs[3].value,
+					posA=val.indexOf('@'),
+					posD=val.indexOf('.');
+
+				if(val==''){
+					this.borderColor='red';
+					tips[3].style.color='red';
+					tips[3].innerHTML='邮箱不能为空';
+				}else{
+					if(posA<1||posD-posA<2){
+						this.borderColor='red';
+						tips[3].style.color='red';
+						tips[3].innerHTML='邮箱格式错误';
+					}else{
+						this.borderColor='#3BC048';
+						tips[3].style.color='#3BC048';
+						tips[3].innerHTML='邮箱格式正确';
+					}
+				}
+			}
+
+			//验证手机
+			inputs[4].onblur=function(){
+				var val=inputs[4].value;
+				if(val==''){
+					this.borderColor='red';
+					tips[4].style.color='red';
+					tips[4].innerHTML='手机号不能为空';
+				}else{
+					if(val.length==11&&!isNaN(val)){
+						this.borderColor='#3BC048';
+						tips[4].style.color='#3BC048';
+						tips[4].innerHTML='格式正确';
+					}else{
+						this.borderColor='red';
+						tips[4].style.color='red';
+						tips[4].innerHTML='格式错误';
+					}
+				}
+			}
+
+			//提交
+			btn.onclick=function(){
+				if(inputs[0].borderColor=='#3BC048'&&inputs[1].borderColor=='#3BC048'&&inputs[2].borderColor=='#3BC048'&&inputs[3].borderColor=='#3BC048'&&inputs[4].borderColor=='#3BC048'){
+					alert('验证成功！');
+				}else{
+					alert('验证失败！');
+					return false;
+				}
+			}
+
+		}
+
+	</script>
+</body>
+</html>
