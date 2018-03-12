@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务3</title>
+	<style type="text/css">
+		body{text-align: center; font-size: 15px; margin-top:40px;}
+		label{display:inline-block; width:250px;}
+		#student,#graduate{line-height: 30px; width: 600px; margin:40px auto; text-align: left; display:none;}
+		span{display:inline-block; width:100px; text-align: right; margin-right:20px;  }
+		#city{width:180px; margin-right: 30px; height:30px;}
+		#groups{width:260px; height:30px;}
+		#company{width:471px; height:25px;}
+	</style>
+</head>
+<body>
+	<form>
+		<label><input type="radio" name="student">在校生</label>
+		<label><input type="radio" name="student">非在校生</label>
+
+		<div id='student'>
+			<span id='school'>学校</span>
+			<select id='city'>
+				<option>北京</option>
+				<option>上海</option>
+				<option>广州</option>
+			</select>
+
+			<select id='groups'>
+				<option>北京大学</option>
+				<option>清华大学</option>
+				<option>北京师范大学</option>
+				<option>北京电影学院</option>
+				<option>对外经济贸易大学</option>
+			</select>
+		</div><!-- student结束 -->
+
+		<div id='graduate'>
+			<span id='job'>工作单位</span>
+			<input type='text' id='company'>
+		</div><!-- graduate结束 -->
+	</form>
+
+	<script type="text/javascript">
+		window.onload=function(){
+			var doc=document,
+				inputs=doc.getElementsByTagName('input'),
+				stu=doc.getElementById('student'),
+				gra=doc.getElementById('graduate'),
+				city=doc.getElementById('city'),
+				groups=doc.getElementById('groups');
+
+			inputs[0].onchange=function(){
+				stu.style.display='block';
+				gra.style.display='none';
+			}
+
+			inputs[1].onchange=function(){
+				gra.style.display='block';
+				stu.style.display='none';
+			}
+
+			city.onchange=function(){
+				changeCity();
+			}
+
+			//学校选项随城市改变
+			function changeCity(){
+				var val=city.value;
+				groups.options.length=0;
+				switch(val){
+					case '北京':
+							groups.add(new Option('北京大学'),undefined);
+							groups.add(new Option('清华大学'),undefined);
+							groups.add(new Option('北京师范大学'),undefined);
+							groups.add(new Option('北京电影学院'),undefined);
+							groups.add(new Option('对外经济贸易大学'),undefined);
+							break;
+					case '上海':
+							groups.add(new Option('上海大学'),undefined);
+							groups.add(new Option('上海交通大学'),undefined);
+							groups.add(new Option('复旦大学'),undefined);
+							groups.add(new Option('上海戏剧学院'),undefined);
+							break;
+					case '广州':
+							groups.add(new Option('中山大学'),undefined);
+							groups.add(new Option('华南理工大学'),undefined);
+							groups.add(new Option('暨南大学'),undefined);
+							groups.add(new Option('华南师范大学'),undefined);
+							groups.add(new Option('华南农业大学'),undefined);
+							groups.add(new Option('广州大学'),undefined);
+							break;
+				}
+			}
+
+		}
+
+	</script>
+</body>
+</html>
