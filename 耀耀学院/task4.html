@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务4</title>
+	<style type="text/css">
+		body{text-align: center;}
+		table{border-collapse: collapse;}
+		#table td,#table_top td,#table_left td{height:40px; width:40px; padding:0; margin:0; border:1px solid white;}
+		#table_top{margin:0 auto;}
+		#table_left{position: absolute; left:calc(50% - 249px); top:52px;}
+		#table{margin:0 auto; border:3px solid black;}
+		#table td{border:1px solid grey;}
+		.parent{position: relative;}
+		#box{width:40px; height: 40px; background: red; position:absolute; left:calc(50% - 40px); top: 167px;
+			transform: rotate(0deg);
+			-ms-transform: rotate(0deg); /* IE 9 */
+			-webkit-transform: rotate(0deg); /* Safari and Chrome */
+		}
+		.direction{height:10px; background: blue; position:absolute; top:0; left:0; width:40px;}
+	</style>
+</head>
+<body>
+	<table id='table_top'>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+			<td>7</td>
+			<td>8</td>
+			<td>9</td>
+			<td>10</td>
+		</tr>
+	</table>
+
+	<table id='table_left'>
+		<tr><td>1</td></tr>
+		<tr><td>2</td></tr>
+		<tr><td>3</td></tr>
+		<tr><td>4</td></tr>
+		<tr><td>5</td></tr>
+		<tr><td>6</td></tr>
+		<tr><td>7</td></tr>
+		<tr><td>8</td></tr>
+		<tr><td>9</td></tr>
+		<tr><td>10</td></tr>
+	</table>
+
+	<div class='parent'>
+		<table id='table'>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+			<tr>
+				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+			</tr>
+		</table>
+	</div>
+
+	<button>start</button>
+	<button>go</button>
+	<button>left</button>
+	<button>right</button>
+	<button>back</button>
+
+<script type="text/javascript">
+	window.onload=function(){
+		var table=document.getElementById('table'),
+			parent=table.parentNode,
+			btns=document.getElementsByTagName('button');
+
+		var direction,  //记录当前方向
+			box;    //方块
+
+		//新建小方块
+		function start(){
+			box=document.createElement('div');
+			box.id='box';
+			box.innerHTML="<div class='direction'></div>";
+			parent.insertBefore(box, parent.firstChild);
+			direction='up';  //方向朝上
+		}
+
+		//旋转
+		function changeDir(dir,angle){
+			direction=dir;
+			box.style.transform='rotate(' + angle + ')';
+		}
+
+		//向左转
+		function left(){
+			switch(direction){
+				case 'left':
+						changeDir('down','180deg');
+						break;
+				case 'up':
+						changeDir('left','270deg');
+						break;
+				case 'right':
+						changeDir('up','0deg');
+						break;
+				case 'down':
+						changeDir('right','90deg');
+						break;
+			}
+		}
+
+		//向右转
+		function right(){
+			switch(direction){
+				case 'left':
+						changeDir('up','0deg');
+						break;
+				case 'up':
+						changeDir('right','90deg');
+						break;
+				case 'right':
+						changeDir('down','180deg');
+						break;
+				case 'down':
+						changeDir('left','270deg');
+						break;
+			}
+		}
+
+		//向后转
+		function back(){
+			switch(direction){
+				case 'left':
+						changeDir('right','90deg');
+						break;
+				case 'up':
+						changeDir('down','180deg');
+						break;
+				case 'right':
+						changeDir('left','270deg');
+						break;
+				case 'down':
+						changeDir('up','0deg');
+						break;
+			}
+		}
+
+		//前进
+		function go(){
+			var left=box.offsetLeft,
+				top=box.offsetTop;
+			switch(direction){
+				case 'left':
+						if(left>314){
+							box.style.left=left-41+'px';
+						}
+						break;
+				case 'up':
+						if(top>3){
+							box.style.top=top-41+'px';
+						}
+						break;
+				case 'right':
+						if(left<683){
+							box.style.left=left+41+'px';
+						}
+						break;
+				case 'down':
+						if(top<372){
+							box.style.top=top+41+'px';
+						}
+			}
+		}
+
+		//重置变量
+		function reset(){
+			parent.removeChild(parent.firstChild);
+			direction=null;
+			box=null;
+		}
+
+		btns[0].onclick=function(){
+			reset();
+			start();
+		}
+
+		btns[1].onclick=function(){
+			go();
+		}
+
+		btns[2].onclick=function(){
+			left();
+		}
+
+		btns[3].onclick=function(){
+			right();
+		}
+
+		btns[4].onclick=function(){
+			back();
+		}
+
+	}
+</script>
+
+</body>
+</html>
