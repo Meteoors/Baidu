@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>任务4</title>
+	<title>任务5</title>
 	<style type="text/css">
-		body{text-align: center; margin:0; padding:0;}
-		table{border-collapse: collapse; padding: 0;}
+		body{text-align: center;}
+		table{border-collapse: collapse;}
 		#table td,#table_top td,#table_left td{height:40px; width:40px; padding:0; margin:0; border:1px solid white;}
-		#table_top{margin:0; margin-left: 478px;}
-		#table_left{position: absolute; left:434px; top:44px;}
-		#table{margin:0 0 0 476px; border:3px solid black;}
+		#table_top{margin:0 auto;}
+		#table_left{position: absolute; left:calc(50% - 249px); top:52px;}
+		#table{margin:0 auto; border:3px solid black; margin-bottom:10px;}
 		#table td{border:1px solid grey;}
-		.parent{position: relative;}
-		#box{width:40px; height: 40px; background: red; position:absolute; left:643px; top: 167px;
-			transform: rotate(0deg);
-			-ms-transform: rotate(0deg); /* IE 9 */
-			-webkit-transform: rotate(0deg); /* Safari and Chrome */
+		.box{background-color: red; position: relative;
+			  transform: rotate(0deg);
+			  -ms-transform: rotate(0deg); /* IE 9 */
+			  -webkit-transform: rotate(0deg); /* Safari and Chrome */
 		}
-		.direction{height:10px; background: blue; position:absolute; top:0; left:0px; width:40px;}
+		.direction{height:10px; background: blue; position:absolute; top:0; left:0; width:40px;}
 	</style>
 </head>
 <body>
@@ -48,7 +47,6 @@
 		<tr><td>10</td></tr>
 	</table>
 
-	<div class='parent'>
 		<table id='table'>
 			<tr>
 				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
@@ -81,37 +79,45 @@
 				<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
 			</tr>
 		</table>
-	</div>
 
 	<button>start</button>
 	<button>go</button>
 	<button>left</button>
 	<button>right</button>
 	<button>back</button>
+	<input type="text" id='input'>
+	<button>执行</button>
 
 <script type="text/javascript">
 	window.onload=function(){
 		var table=document.getElementById('table'),
-			parent=table.parentNode,
-			btns=document.getElementsByTagName('button');
+			btns=document.getElementsByTagName('button'),
+			input=document.getElementById('input');
 
-		var direction,  //记录当前方向
-			box;    //方块
-		var l=5, t=5;
+		var direction='up'; //记录当前方向
+		var l=4, t=4;
+		var angle='0deg';
 
-		//新建小方块
-		function start(){
-			box=document.createElement('div');
-			box.id='box';
-			box.innerHTML="<div class='direction'></div>";
-			parent.insertBefore(box, parent.firstChild);
-			direction='up';  //方向朝上
+		//还原上一步颜色
+		function pre(){
+			var goal=table.rows[t].cells[l];
+			goal.className=null;
+			goal.removeChild(goal.firstChild);
 		}
 
-		//旋转
-		function changeDir(dir,angle){
+		//改变目标颜色
+		function changeColor(){
+			var goal=table.rows[t].cells[l];
+			goal.className='box';
+			goal.innerHTML="<div class='direction'></div>";
+		}
+
+		//改变方向
+		function changeDir(dir,ang){
 			direction=dir;
-			box.style.transform='rotate(' + angle + ')';
+			angle=ang;
+			var box=document.getElementsByClassName('box')[0];
+			box.style.transform='rotate(' + ang + ')';
 		}
 
 		//向左转
@@ -168,79 +174,59 @@
 			}
 		}
 
-		//前进
-		/*function go(){
-			var left=box.offsetLeft,
-				top=box.offsetTop;
-			switch(direction){
-				case 'left':
-						if(left>314){
-							box.style.left=left-41+'px';
-						}
-						break;
-				case 'up':
-						if(top>3){
-							box.style.top=top-41+'px';
-						}
-						break;
-				case 'right':
-						if(left<683){
-							box.style.left=left+41+'px';
-						}
-						break;
-				case 'down':
-						if(top<372){
-							box.style.top=top+41+'px';
-						}
-			}
-		}*/
-
 		function go(){
-			var left=box.offsetLeft,
-				top=box.offsetTop;
 			switch(direction){
 				case 'left':
-						if(l>1){
-							box.style.left=left-41+'px';
+						if(l>0){
+							pre();
 							l--;
+							changeColor();
 						}
 						break;
 				case 'up':
-						if(t>1){
-							box.style.top=top-41+'px';
+						if(t>0){
+							pre();
 							t--;
+							changeColor();
 						}
 						break;
 				case 'right':
-						if(l<10){
-							box.style.left=box.offsetLeft+41+'px';
+						if(l<9){
+							pre();
 							l++;
+							changeColor();
 						}
 						break;
 				case 'down':
-						if(t<10){
-							box.style.top=top+41+'px';
+						if(t<9){
+							pre();
 							t++;
+							changeColor();
 						}
 			}
 		}
 
 		//重置变量
 		function reset(){
-			parent.removeChild(parent.firstChild);
-			direction=null;
-			box=null;
+			direction='up';
+			angle='odeg';
+			l=4;
+			t=4;
 		}
 
+		//新建一个小方块
 		btns[0].onclick=function(){
 			reset();
-			start();
+			changeColor();
 		}
 
+		//前进
 		btns[1].onclick=function(){
 			go();
+			changeDir(direction,angle);
 		}
 
+		//左转
 		btns[2].onclick=function(){
 			left();
 		}
@@ -253,7 +239,65 @@
 			back();
 		}
 
-	}
+		//判断不同指令
+		function execute(){
+			var val=document.getElementById('input').value,
+				pred=direction;
+			switch(val){
+				case 'TRA LEF':
+						direction='left';
+						go();
+						direction=pred;
+						changeDir(direction,angle);
+						break;
+				case 'TRA TOP':
+						direction='up';
+						go();
+						direction=pred;
+						changeDir(direction,angle);
+						break;
+				case 'TRA RIG':
+						direction='right';
+						go();
+						direction=pred;
+						changeDir(direction,angle);
+						break;
+				case 'TRA BOT':
+						direction='down';
+						go();
+						direction=pred;
+						changeDir(direction,angle);
+						break;
+				case 'MOV LEF':
+						direction='left';
+						go();
+						changeDir('left','270deg');
+						break;
+				case 'MOV TOP':
+						direction='up';
+						go();
+						changeDir('up','0deg');
+						break;
+				case 'MOV RIG':
+						direction='right';
+						go();
+						changeDir('right','90deg');
+						break;
+				case 'MOV BOT':
+						direction='down';
+						go();
+						changeDir('down','180deg');
+						break;
+			}
+		}
+
+		//执行
+		btns[5].onclick=function(){
+			execute();
+		};
+
+	};  //onload结束
+
 </script>
 
 </body>
