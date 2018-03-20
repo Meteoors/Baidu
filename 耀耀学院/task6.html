@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务6</title>
+	<style type="text/css">
+		*{margin:0; padding:0;}
+		body{height:1500px; background: #fff;}
+		button{border:none; outline: none; background: #3879CA; color: #fff; border-radius: 5px; height:30px; line-height: 30px; padding:0 10px; font-size: 16px;}
+		#play{position: absolute; left:calc(50% - 50px); top:200px;}
+		#float{width:330px; height:250px; background: #D5E0ED; position:fixed; left:calc(50% - 165px); top:200px; display: none;}
+		.title{height:30px; background:#3879CA; color: #fff; line-height: 30px; text-indent: 10px; font-size: 16px;}
+		.content{padding: 5px 10px;}
+		div.content button:first-child{position: absolute; left:190px; bottom:10px;}
+		.content button:first-child + button{position:absolute; right:20px; bottom:10px;}
+
+	</style>
+</head>
+<body>
+	<button id='play'>弹出浮出层</button>
+	<div id='float'>
+		<div class='title'>浮出层</div>
+		<div class='content'>这是一个浮出层
+			<button>确定</button>
+			<button>取消</button>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		window.onload=function(){
+			var play=document.getElementById('play'),
+				body=document.body,
+				float=document.getElementById('float'),
+				btns=float.getElementsByTagName('button');
+
+			var disX,disY;
+
+			//显示浮出层
+			play.onclick=function(event){
+				float.style.display='block';
+				body.style.background='#7C7B7B';
+				float.style.left='calc(50% - 165px)';
+				float.style.top='200px';
+				event.stopPropagation();    //防止click冒泡到document上
+			};
+
+			//点击浮出层取消冒泡，防止浮出层的click(mousedown+mouseup）冒泡到document上关闭浮出层
+			float.onclick=function(event){
+				event.stopPropagation();
+			};
+
+			//浮出层按下鼠标取得disX和disY，给document绑定mousemove事件，改变float位置
+			float.onmousedown=function(event){
+				disX=event.clientX-float.offsetLeft;
+				disY=event.clientY-float.offsetTop;
+				document.onmousemove=function(event){		//将event传给move
+					move(event);
+				};
+			};
+
+			//浮出层位置随鼠标移动
+			function move(event){
+				float.style.left=(event.clientX-disX)+'px';
+				float.style.top=(event.clientY-disY)+'px';
+			}
+
+			//释放鼠标时取消document的mousemove事件
+			float.onmouseup=function(){
+				document.onmousemove=null;
+			};
+
+			//给document、两个按钮绑定click事件，关闭浮出层
+			document.onclick=btns[0].onclick=btns[1].onclick=function(event){
+				float.style.display='none';
+				body.style.background='#fff';
+			};
+
+			//两个按钮mousedown时取消冒泡，防止触发float的mousedown移动浮出层
+			btns[0].onmousedown=btns[1].onmousedown=function(event){
+				event.stopPropagation();
+			};
+
+
+		};
+	</script>
+</body>
+</html>
