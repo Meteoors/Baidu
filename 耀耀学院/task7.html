@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>任务7</title>
+	<style type="text/css">
+		*{padding:0; margin:0;}
+		table{border-collapse: collapse; margin:100px 400px; width:620px;}
+		th,td{height:40px; width:120px; text-align: center; border:1px solid #B3B3B3; position: relative; line-height: 40px;}
+		th{background: #636363; color: #fff; }
+		.down{border-top:7px solid #fff; border-left:7px solid transparent; border-right: 7px solid transparent; border-bottom: 7px solid transparent; position:absolute; right:10px; bottom:5px;}
+		.up{border-top:7px solid transparent; border-left:7px solid transparent; border-right: 7px solid transparent; border-bottom: 7px solid #fff; position:absolute; right:10px; top:5px;}
+	</style>
+</head>
+<body>
+	<table><tr>
+			<th>姓名</th>
+			<th>语文<div class='up'></div><div class='down'></div></th>
+			<th>数学<div class='up'></div><div class='down'></div></th>
+			<th>英语<div class='up'></div><div class='down'></div></th>
+			<th>总分<div class='up'></div><div class='down'></div></th>
+		</tr>
+
+		<tr>
+			<td>小明</td>
+			<td>80</td>
+			<td>90</td>
+			<td>70</td>
+			<td>240</td>
+		</tr>
+		<tr>
+			<td>小红</td>
+			<td>90</td>
+			<td>60</td>
+			<td>90</td>
+			<td>240</td>
+		</tr>
+		<tr>
+			<td>小亮</td>
+			<td>60</td>
+			<td>100</td>
+			<td>70</td>
+			<td>230</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+		//table.children[0]和table.firstChild都指向tbody，就算table内没有使用tbody！！！
+
+		window.onload=function(){
+			var table=document.getElementsByTagName('table')[0].firstChild,  //指向tbody
+				rows=table.getElementsByTagName('tr'),
+				aRow=Array.prototype.slice.call(rows);    //将rows从HTMLCollection转换为Array,以便排序
+
+			aRow.splice(0,1);    //去除第一行，第一个参数为起始位置（包含本身），第二个参数为切掉的长度
+
+			//升序
+			function up(i){
+				aRow.sort(function(a,b){
+					var v1=a.children[i].innerHTML,
+						v2=b.children[i].innerHTML;
+					return v1-v2;
+				});
+			}
+
+			//降序
+			function down(i){
+				aRow.sort(function(a,b){
+					var v1=b.children[i].innerHTML,
+						v2=a.children[i].innerHTML;
+					return v1-v2;
+				});
+			}
+
+			//移除原有的rows并将排序后的aRow渲染到table上
+			function paint(){
+				for(var j=0,len=rows.length-1; j<len; j++){
+					table.removeChild(rows[1]);   //注意rows动态刷新，移除第1行循环3次即可
+				}
+
+				for(var k=0; k<aRow.length; k++){
+					table.appendChild(aRow[k]);
+				}
+			}
+
+			var cells=rows[0].children;
+
+			for(let i=1; i<cells.length; i++){
+				var uBox=cells[i].getElementsByClassName('up')[0],
+					dBox=cells[i].getElementsByClassName('down')[0];
+				uBox.onclick=function(){
+					up(i);
+					paint();
+				};
+
+				dBox.onclick=function(){
+					down(i);
+					paint();
+				};
+			}
+		};
+	</script>
+</body>
+</html>
