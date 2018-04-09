@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>鼠标悬浮模糊效果</title>
+	<style type="text/css">
+
+		/* transition; -webkit-filter; opacity+background; -webkit-linear-gradient; -webkit-background-clip; animation; */
+
+		*{padding:0; margin:0;}
+		body{background: black;}
+		.box{padding:50px; background: white; height:300px; width:500px; position: absolute; left:calc(50% - 300px); top:100px;}
+		.cover{position: absolute; left:80px; top:100px; width:440px; height:200px;  opacity: 0.2; transition: all 0.5s ease-in;}
+		.btn{ height:200px; width:440px; position:absolute; left:80px; top:100px; text-align: center;}
+
+		img{transition: all 0.5s ease-in;}
+
+		.box:hover img{
+			transition:all 1s ease-in;
+			-webkit-filter:blur(3px);
+		}
+
+		.box:hover .cover{
+			/*opacity: 0.5;*/
+			background: #fff;
+			transition: all 1s ease-in;
+		}
+
+		.btn h2{
+				color: transparent;
+				font-family: "微软雅黑";
+				font-size: 40px;
+				background-image: -webkit-linear-gradient(left, blue, yellow 25%, blue 50%, yellow 75%, blue 100%);
+				background-size: 200%;
+				-webkit-background-clip: text;
+				animation: flow 5s infinite linear;
+				line-height: 200px;margin: 0;
+				opacity: 0;
+				transition: opacity 1s ease;
+		}
+		.box:hover h2{
+				opacity: 1;
+		}
+		@keyframes flow {
+				0% {
+					background-position: 0;
+				}
+				100% {
+					background-position: 100%;
+				}
+		}
+
+		.btn{
+				box-sizing: border-box;
+		}
+		.btn:before{
+				content: ' ';
+				border:0px solid black;
+				position: absolute;
+				left: 50%;
+				top: 0;
+				height: 98%;
+				width: 0;
+				transition: all 0.5s ease-in;
+		}
+		.box:hover .btn:before{
+				border: 3px solid #FFFFFF;
+				border-width: 3px 0;
+				left: 0;
+				/*height: 98%;*/
+				width: 100%;
+				transition: all 1s ease-in;
+		}
+		.btn:after{
+				content: ' ';
+				border:0px solid black;
+				position: absolute;
+				height: 0;
+				width: 100%;
+				left: 0;
+				top: 50%;
+				transition: all 0.5s ease-in;
+		}
+		.box:hover .btn:after{
+				border:3px solid #fff;
+				border-width: 0 3px;
+				top: 0;
+				height: 100%;
+				width: 99%;
+				transition: all 1s ease-in;
+		}
+	</style>
+</head>
+<body>
+	<div class='box'>
+		<img src="C:\Users\lenovo\Pictures\星空壁纸.jpg" width='500px' height='300px' >
+		<div class='cover'></div>
+		<div class='btn'>
+			<h2>Welcome!</h2>
+		</div>
+	</div>
+
+</body>
+</html>
