@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>动态数据绑定（一）</title>
+	<style type="text/css">
+		body{margin:50px;}
+	</style>
+</head>
+<body>
+	<p>请实现这样的一个 Observer，要求如下：</p>
+	<p>1.传入参数只考虑对象，不考虑数组。</p>
+	<p>2.new Observer返回一个对象，其 data 属性要能够访问到传递进去的对象。</p>
+	<p>3.通过 data 访问属性和设置属性的时候，均能打印出右侧对应的信息。(app.data.user&nbsp;&nbsp;&nbsp;&nbsp;//你访问了user )
+	</p>
+
+	<h2>请打开控制台并访问data/app的属性观察效果</h2>
+	<p>app.data=data={
+	    user:{
+			name: 'maomao',
+			age:21
+		},
+
+		address:{
+			city: 'guangzhou'
+		}
+	}
+	</p>
+
+<script type="text/javascript">
+	function Observer(obj){
+		this.data=obj;
+		this.walk(obj);		//调用walk()深度遍历obj的属性   walk调用位置，这里的this指向app (new Observer的new绑定)
+	}
+
+	//walk遍历传入对象的所有属性
+	Observer.prototype.walk=function(obj){
+		for(let key in obj){
+
+			//用hasOwnProperty过滤obj原型上的可枚举属性，只遍历obj本身的属性
+			if(obj.hasOwnProperty(key)){
+				let val=obj[key];
+
+				//如果属性值仍为object，继续递归遍历到最底层
+				if(typeof val === 'object'){
+					new Observer(val);
+				}
+
+				//调用convert(),给每个属性描述符添加setter和getter，此时对象属性由数据描述符变为存取描述符
+				this.convert(key,val);   //convert调用位置，这里的this指向app (app.walk()隐式绑定)
+			}
+		}
+	};
+
+	Observer.prototype.convert=function(key,val){
+		Object.defineProperty(this.data,key,{	 //this指向app (app.convert()隐式绑定)
+			enumerable: true,
+			configurable: true,
+
+			get: function(){
+				console.log(`你访问了${key}`);
+				return val;
+			},
+
+			set: function(newVal){
+				console.log(`你设置了${key}`);
+				console.log(`新的${key}=${newVal}`);
+				val=newVal;		//由于getter和setter两个闭包引用了val，val会存在于内存中，当getter被调用时，返回更新后的val
+
+				//如果设置的新值newVal是一个对象，给newVal的属性添加setter和getter
+				if(typeof newVal==='object'){
+					new Observer(newVal);
+				}
+			}
+		});
+	};
+
+	let data={
+		user:{
+			name:'maomao',
+			age:21
+		},
+
+		address:{
+			city:'guangzhou'
+		}
+	};
+
+	let app=new Observer(data);   //Observer调用位置
+</script>
+</body>
+</html>
