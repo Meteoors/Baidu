@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>动态数据绑定(二)</title>
+</head>
+<body>
+<script type="text/javascript">
+
+	function EventHandler(){
+		this.handlers={};
+	}
+
+	EventHandler.prototype={
+		//注册事件处理函数
+		on:function(eventType,fn){
+			if(!(eventType in this.handlers)){
+				this.handlers[eventType]=[];
+			}
+			this.handlers[eventType].push(fn);
+		},
+
+		//取消事件处理函数
+		off:function(eventType){
+			//先判断防误删
+			if(this.handlers.hasOwnProperty(eventType)){
+				delete this.handlers[eventType];
+			}
+		},
+
+		//发布事件
+		emit:function(eventType){
+			//data数组保存回调函数的参数
+			let data=Array.prototype.slice.call(arguments,1);
+
+			for(var i=0; i<this.handlers[eventType].length; i++){
+				//这里的apply只是为了把data数组展开成回调函数的参数
+				this.handlers[eventType][i].apply(this,data);
+			}
+
+
+			/*this.handlers[eventType].forEach(function(fn){
+				fn(data);//这里没有展开
+			});
+
+			for(var fn in this.handlers[eventType]){
+				fn.apply(this,data);
+			}*/
+
+		}
+
+	};
+
+
+
+	function Observer(obj){
+		this.data=obj;
+		this.walk(obj);
+
+		//events指向新的eventHandler对象
+		this.events=new EventHandler();
+	}
+
+	Observer.prototype={
+		//调用app.events对象的on给事件注册回调函数
+		//eventType为事件名，应传入obj对象对应的属性名;fn为自定义回调函数
+		//回调函数可以使用两个参数，且在setter中被初始化
+		//第一个参数将被初始化为原来的值(val)，第二个参数初始化为新值(newVal)
+		$watch:function(eventType,fn){
+			this.events.on(eventType,fn);
+		},
+
+		//深度遍历obj
+		walk:function(obj){
+			//遍历obj的可枚举属性
+			for(let key in obj){
+
+				//过滤obj原型上的属性
+				if(obj.hasOwnProperty(key)){
+					let val=obj[key];
+
+					//如果obj属性仍为对象，进行递归
+					if(typeof obj[key]==='object'){
+						new Observer(val);
+					}
+
+					//调用convert给属性添加setter和getter
+					this.convert(key,val);
+				}
+			}
+		},
+
+		convert:function(key,val){
+			//将当前this(app)保存在_this中,setter里发布事件需要引用
+			let _this=this;
+
+			Object.defineProperty(this.data, key, {
+				enumerable:true,
+				configurable:true,
+
+				get:function(){
+					console.log(`你访问了${key}`);
+					return val;
+				},
+
+				set:function(newVal){
+					console.log(`你设置了${key}`);
+					console.log(`新的${key}=${newVal}`);
+
+					//调用app.events中的emit发布事件
+					//事件名为key，这里要使用_this(app)而非this
+					//回调函数的参数在此被初始化
+					_this.events.emit(key,val,newVal);
+
+					val=newVal;
+
+					//如果newVal为object，给object每个属性添加setter和getter
+					if(typeof newVal==='object'){
+						new Observer(newVal);
+					}
+				}
+
+			});//defineProperty结束
+
+		}//convert结束
+
+	};//prototype结束
+
+
+	var app=new Observer({
+		user:{
+			name:'maomao',
+			age:21
+		},
+		address:{
+			city:'guangzhou'
+		}
+	});
+
+	app.$watch('address',function(address,newAddress){
+	 	console.log(`我搬家了，以前在${address},现在搬到${newAddress}了`);
+	});
+
+
+</script>
+</body>
+</html>
